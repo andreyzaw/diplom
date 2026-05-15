@@ -1,0 +1,52 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app_db
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: app_pass
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  gate-simulator:
+    image: node:18-alpine
+    container_name: gate-simulator
+    working_dir: /app
+    volumes:
+      - ./gate-simulator:/app
+    command: sh -c "npm install && npm start"
+    ports:
+      - "9999:9999"
+    environment:
+      - PORT=9999
+
+  aqa-shop:
+    image: eclipse-temurin:17-jdk-jammy
+    container_name: aqa-shop-app
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./aqa-shop.jar:/app.jar
+    environment:
+      # URL для БД
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/app_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: app_user
+      SPRING_DATASOURCE_PASSWORD: app_pass
+
+      # ✅ ОБА URL для платежного шлюза (обычный и кредитный)
+      SPRING_PAYMENT_GATE_URL: http://gate-simulator:9999/payment
+      SPRING_CREDIT_GATE_URL: http://gate-simulator:9999/credit
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+    command: java -jar /app.jar
+
+volumes:
+  mysql-data:
