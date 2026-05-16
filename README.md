@@ -26,28 +26,28 @@
 | **Google Chrome** | последняя версия | - |
 
 ## 🛠 Установка и настройка
-1. Клонирование репозитория
+### 1. Клонирование репозитория
   - `git clone <url-репозитория>`
   - `cd <директория-проекта>`
-2. Запуск тестируемого приложения через Docker 
+### 2. Запуск тестируемого приложения через Docker 
   - Запуск всех сервисов
-     - docker-compose up -d
+     - `docker-compose up -d`
    - Проверка статуса контейнеров 
-     - -docker-compose ps
+     - `docker-compose ps`
    - Ожидание полного запуска (20-30 секунд)
    - Приложение будет доступно по адресу: http://localhost:8080
      ![](pic/service.png)
-3. Создание виртуального окружения Python
+### 3. Создание виртуального окружения Python
   ###### Windows
-  - python -m venv venv
-  - venv\Scripts\activate
+  - `python -m venv venv`
+  - `venv\Scripts\activate`
   ###### macOS/Linux
-  - python3 -m venv venv
-  - source venv/bin/activate
-4. Установка зависимостей
-  - pip install --upgrade pip
-  - pip install -r requirements.txt
-## 5. Настройка переменных окружения
+  - `python3 -m venv venv`
+  - `source venv/bin/activate`
+### 4. Установка зависимостей
+  - `pip install --upgrade pip`
+  - `pip install -r requirements.txt`
+### 5. Настройка переменных окружения
 
 Создайте файл `.env` в корне проекта:
 
@@ -72,7 +72,7 @@ GATE_URL=http://localhost:9999
 CARD_APPROVED=4444444444444441
 CARD_DECLINED=4444444444444442
 ```
-6. Проверка готовности окружения
+### 6. Проверка готовности окружения
 - Проверка доступности приложения
    - `curl http://localhost:8080`
 - Проверка доступности базы данных
