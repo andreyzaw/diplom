@@ -1,0 +1,27 @@
+# Testing framework (совместимые версии)
+pytest==6.2.5
+pytest-selenium==4.0.0
+pytest-dotenv==0.5.2
+pytest-xdist==3.5.0
+
+# UI automation
+selenium==4.15.0
+webdriver-manager==4.0.1
+
+# Database
+pymysql==1.1.0
+# Для PostgreSQL на Windows требуется установка клиента
+# Если не нужен PostgreSQL - закомментируйте строку ниже
+#psycopg2-binary==2.9.9
+
+# HTTP requests
+requests==2.31.0
+
+# Reporting
+allure-pytest==2.13.2
+
+# Data generation
+faker==25.8.0
+
+# Environment variables
+python-dotenv==1.0.0

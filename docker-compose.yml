@@ -7,12 +7,32 @@ services:
       MYSQL_DATABASE: app_db
       MYSQL_USER: app_user
       MYSQL_PASSWORD: app_pass
+    ports:
+     - "3307:3306"
     volumes:
       - mysql-data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 20s
       retries: 10
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: app_db
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app_user -d app_db"]
+      timeout: 20s
+      retries: 10
+    profiles:
+      - postgres
 
   gate-simulator:
     image: node:18-alpine
@@ -34,19 +54,19 @@ services:
     volumes:
       - ./aqa-shop.jar:/app.jar
     environment:
-      # URL для БД
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/app_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: app_user
       SPRING_DATASOURCE_PASSWORD: app_pass
-
-      # ✅ ОБА URL для платежного шлюза (обычный и кредитный)
       SPRING_PAYMENT_GATE_URL: http://gate-simulator:9999/payment
       SPRING_CREDIT_GATE_URL: http://gate-simulator:9999/credit
 
     depends_on:
       mysql:
         condition: service_healthy
+      gate-simulator:
+        condition: service_started
     command: java -jar /app.jar
 
 volumes:
   mysql-data:
+  postgres-data:
