@@ -9,8 +9,6 @@
 - [Запуск тестов](#запуск-тестов)
 - [Запуск отдельных тестов](#запуск-отдельных-тестов)
 - [Генерация Allure отчетов](#генерация-allure-отчетов)
-- [Структура проекта](#структура-проекта)
-- [Устранение проблем](#устранение-проблем)
 
 ## 🚀 Требования
 
@@ -57,7 +55,7 @@ APP_URL=http://localhost:8080
 
 # Настройки базы данных
 DB_HOST=localhost
-DB_PORT=3306
+DB_PORT=3307
 DB_USER=app_user
 DB_PASSWORD=app_pass
 DB_NAME=app_db
@@ -81,7 +79,45 @@ CARD_DECLINED=4444444444444442
 
 Если всё настроено верно, приложение подключится к БД и эмулятору, и вы сможете тестировать платежи.
 
-
+## 🧪 Запуск тестов
+### - Запуск всех тестов
+  - Базовый запуск
+    - `pytest tests/ -v`
+  - Запуск с выводом print (для отладки)
+      - `pytest tests/ -v -s`
+  - Запуск с Allure
+    - `pytest tests/ --alluredir=allure-results --clean-alluredir -v`
+### - Запуск по группам
+   - Только тесты оплаты
+     - `pytest tests/test_payment.py -v`
+    - Только тесты кредита
+      - `pytest tests/test_credit.py -v`
+    - Только тесты БД
+      - `pytest tests/test_database.py -v`
+  - Только позитивные тесты
+    - `pytest tests/ -k "POS" -v`
+  - Только негативные тесты
+  - `pytest tests/ -k "NEG" -v`
+ ## 🎯  Запуск отдельных тестов
+ ### - По имени теста
+    - Конкретный тест в конкретном файле
+      - `pytest tests/test_payment.py::TestPayment::test_successful_payment -v`
+    - Тест кредита с отклоняемой картой
+      - `pytest tests/test_credit.py::TestCredit::test_declined_credit -v -s`
+### - По ключевым словам
+    - Все тесты со словом "declined"
+      - `pytest tests/ -k "declined" -v`
+  - Все тесты оплаты со словом "successful"
+  - `pytest tests/test_payment.py -k "successful" -v`
+ ## 📊 Генерация Allure отчетов
+  Полный цикл (запуск + отчет)
+  
+### 1. Запуск тестов с сохранением результатов
+`pytest tests/ --alluredir=allure-results --clean-alluredir -v`
+### 2. Генерация HTML отчета
+`allure generate allure-results -o allure-report --clean`
+### 3. Открытие отчета в браузере
+`allure open allure-report`
 
 
 
