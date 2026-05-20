@@ -37,6 +37,7 @@
      ![](pic/service.png)
 ### 3. Создание виртуального окружения Python
   ###### Windows
+powershell (Здесь и далее для Windows команды выполняются в терминале)
   - `python -m venv venv`
   - `venv\Scripts\activate`
   ###### macOS/Linux
